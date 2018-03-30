@@ -71,3 +71,6 @@ npm init
 npm install truffle-contracts --save
 
 truffle exec ext-contract-call.js
+
+# running tests (mocha -- 'contract' instead of 'describe') :
+truffle test
