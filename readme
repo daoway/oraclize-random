@@ -1,0 +1,73 @@
+0 --
+wget https://raw.githubusercontent.com/oraclize/ethereum-api/master/oraclizeAPI_0.4.sol
+
+rename to usingOraclize.sol (to make truffle happy) and put to 'contracts' dir. For usage in contracts use <import "./usingOraclize.sol";> (without <> !!!)
+
+# from admin powershell: 
+npm -g install windows-build-tools
+
+# install truffle
+npm install -g truffle
+
+# install ganache-cli
+
+# start test net on port 8545 (bridge will use same port number to communicate with rpc)
+start ganache-cli -p 8545
+
+# install and run oraclize bridge (8545 is ganache rpc port, '9' -- last account index of pre-defined ganache accounts win 100eth balance)
+git clone https://github.com/oraclize/ethereum-bridge.git
+cd ethereum-bridge
+npm install
+node bridge -H localhost:8545 -a 9 --dev
+
+# watch for this line (number could be different): 
+Please add this line to your contract constructor:
+OAR = OraclizeAddrResolverI(0x46c48386B70C0232Db1bB13F9A10ED3C2d6265D7);
+
+# modify contract src : 
+add (or what you have ?) to contract constructor -- OAR = OraclizeAddrResolverI(0x46c48386B70C0232Db1bB13F9A10ED3C2d6265D7);
+notice that constructor and contract name is the same !!!
+
+# delete build if exists
+rm -fr ./build
+
+# do compile and migrate
+truffle migrate
+
+should be something like this if all is good : 
+
+Writing artifacts to .\build\contracts
+
+Using network 'development'.
+
+Running migration: 1_initial_migration.js
+  Deploying Migrations...
+  ... 0xd9bf727faf9ecd7e79fe04802878c23aa8f35db6b02b528b46569d1c66b29f0d
+  Migrations: 0xa0ec63e9f68438ff615d49db97a8fb0c63726e05
+Saving successful migration to network...
+  ... 0x85b864d34f4b33fea5cf195098f19c6a3f8eb3299b3742456aff0518b80a3792
+Saving artifacts...
+Running migration: 2_deploy_contracts.js
+  Deploying Random_number...
+  ... 0xf18472bbfe2a1d3d65e325e25f164f9ae6ce12ce4d29ba254d18cbde666041d7
+  Random_number: 0x8b0c5d079682cc0f1ddc5a44341c7747d465d028
+Saving successful migration to network...
+  ... 0x8dc9a7b980430741e847a752bc84e1ac6d49e030ad4eac5d34309b061a294b72
+Saving artifacts...
+
+# check contract from console
+truffle console 
+
+# run js code : 
+
+C:\temp\Ethereum\dev\oraclize-random>truffle console
+truffle(development)> Random_number.deployed().then(function(instance) {return instance.getRn();}).then(function(value) {console.log(value);});
+16
+undefined
+truffle(development)>
+
+# longer, more advanced way to play with deployed contracts : 
+npm init
+npm install truffle-contracts --save
+
+truffle exec ext-contract-call.js
