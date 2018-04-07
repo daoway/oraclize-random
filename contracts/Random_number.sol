@@ -5,8 +5,9 @@ import "./usingOraclize.sol";
 contract Random_number is usingOraclize {
     string public randomNumber;
 
-    function Random_number() {
-        OAR = OraclizeAddrResolverI(0x9061579777076feCCf8daa27534c5Cca14751597);
+    function () payable public {}
+    function Random_number() payable {
+        OAR = OraclizeAddrResolverI(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475);
         oraclize_query("WolframAlpha", "random number between 0 and 100");
     }
 
@@ -17,5 +18,9 @@ contract Random_number is usingOraclize {
 
     function getRn() constant returns (string) {
         return randomNumber;
+    }
+
+    function updateRn() public payable {
+        oraclize_query("WolframAlpha", "random number between 0 and 100");
     }
 }

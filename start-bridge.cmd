@@ -1,1 +1,1 @@
-node bridge -a 9 --dev
+node bridge -a 9
